@@ -65,6 +65,8 @@ DWORD WINAPI CIOCPModel::_WorkerThread(LPVOID lpParam)
 		}
 		else
 		{
+			// CONTAINING_RECORD 根据结构体中的某成员的指针来推算出该结构体的指针!
+			// 需要提供:结构体中某个成员变量的地址, 该结构体的原型, 该结构体中的某个成员变量(与前面要是同一个变量)
 			PER_IO_CONTEXT* pIoContext = CONTAINING_RECORD(pOverlapped,PER_IO_CONTEXT,m_overlapped);
 
 			if ((0 == dwBytesTransfered) && (RECV_POSTED == pIoContext->m_opType || SEND_POSTED == pIoContext->m_opType))
@@ -559,7 +561,7 @@ int CIOCPModel::_GetNoOfProcessors()
 bool CIOCPModel::_IsSocketAlive(SOCKET s)
 {
 	int nByteSend = send(s,"",0,0);
-	if (-1 == nByteSend) return false;
+	if (SOCKET_ERROR == nByteSend) return false;
 	return true;
 }
 
@@ -587,6 +589,7 @@ bool CIOCPModel::_HandleError(PER_SOCKET_CONTEXT* pContext, const DWORD& dwError
 	else if (ERROR_NETNAME_DELETED == dwError)
 	{
 		printf_s("检测到客户端异常退出.");
+		// TODO ?这里需不需要删除客户端信息?有待测试确认
 		return true;
 	}
 	else

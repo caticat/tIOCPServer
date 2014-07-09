@@ -30,6 +30,7 @@ int main()
 		if ((cmd == "quit") || (cmd == "exit")) // 退出程序
 		{
 			IOCPModel.Stop(); // 关闭IOCP监听服务
+			IOCPModel.UnloadSocketLib(); // 卸载socket库
 			printf_s("exit server\n");
 			break;
 		}
