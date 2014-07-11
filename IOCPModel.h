@@ -30,7 +30,7 @@ enum OPERATION_TYPE
 // 单IO数据结构体定义
 struct PER_IO_CONTEXT
 {
-	OVERLAPPED m_overlapped; // 每一个重叠网络操作的重叠结构（针对每一个socket的每一个操作，都要有一个）
+	OVERLAPPED m_overlapped; // 每一个重叠网络操作的重叠结构（针对每一个socket的每一个操作，都要有一个） 另：这个成员变量必须要定义在结构体的第一位，因为宏CONTAINING_RECORD要根据他来找到PER_IO_CONTEXT的指针地址
 	SOCKET m_sock; // 这个网络操作所使用的socket
 	WSABUF m_wsaBuf; // WSA类型的缓冲区，用于给重叠操作传参数的
 	char m_szBuffer[MAX_BUFFER_LEN]; // 这个是WSABUF里的具体字符的缓冲区

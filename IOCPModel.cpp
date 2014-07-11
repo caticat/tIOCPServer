@@ -69,9 +69,9 @@ DWORD WINAPI CIOCPModel::_WorkerThread(LPVOID lpParam)
 			// 需要提供:结构体中某个成员变量的地址, 该结构体的原型, 该结构体中的某个成员变量(与前面要是同一个变量)
 			PER_IO_CONTEXT* pIoContext = CONTAINING_RECORD(pOverlapped,PER_IO_CONTEXT,m_overlapped);
 
-			if ((0 == dwBytesTransfered) && (RECV_POSTED == pIoContext->m_opType || SEND_POSTED == pIoContext->m_opType))
+			if ((0 == dwBytesTransfered) && (RECV_POSTED == pIoContext->m_opType || SEND_POSTED == pIoContext->m_opType)) // 客户端正常退出，主动断开连接时调用
 			{
-				printf_s("客户端%s:%d断开连接.",inet_ntoa(pSocketContext->m_clientAddr.sin_addr),ntohs(pSocketContext->m_clientAddr.sin_port));
+				printf_s("客户端%s:%d断开连接.\n",inet_ntoa(pSocketContext->m_clientAddr.sin_addr),ntohs(pSocketContext->m_clientAddr.sin_port));
 				pIOCPModel->_RemoveContext(pSocketContext); // 释放掉对应的资源
 				continue;
 			}
@@ -399,7 +399,7 @@ bool CIOCPModel::_DoAccept(PER_SOCKET_CONTEXT* pSocketContext, PER_IO_CONTEXT* p
 		sizeof(SOCKADDR_IN)+16,sizeof(SOCKADDR_IN)+16,(LPSOCKADDR*)&pLocalAddr,&localLen,(LPSOCKADDR*)&pCliendAddr,&remoteLen);
 
 	printf_s("客户端%s:%d连入.\n",inet_ntoa(pCliendAddr->sin_addr),ntohs(pCliendAddr->sin_port));
-	printf_s("客户端%s:%d信息:%s.\n",inet_ntoa(pCliendAddr->sin_addr),ntohs(pCliendAddr->sin_port),pIoContext->m_wsaBuf.buf);
+	printf_s("客户端%s:%d信息:%s\n",inet_ntoa(pCliendAddr->sin_addr),ntohs(pCliendAddr->sin_port),pIoContext->m_wsaBuf.buf);
 
 	// pSocketContext是listenSocket上的context，还需要监听下一个连接，所以需要新建一个socketContext对应新连入的socket
 	PER_SOCKET_CONTEXT* pNewSocketContext = new PER_SOCKET_CONTEXT;
